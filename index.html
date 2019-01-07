@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <script>
+
+      //Función que genera la elección del computador
+      function computerPlay() {
+        num = Math.floor((Math.random() * 3)) + 1;
+        if (num == 1) {
+          return "Rock";
+        } else if (num == 2) {
+          return "Paper";
+        } else {
+          return "Scissors";
+        }
+      }
+
+      //Ronda de juego que decide quién ganó
+      function playRound(playerSelection, computerSelection) {
+        switch (playerSelection.toLowerCase()) {
+          case "rock":
+            if (computerSelection == "Rock") {
+              return "Draw. Rock vs Rock";
+            } else if (computerSelection == "Paper") {
+              return "You lose! Paper beats Rock"
+            } else {
+              return "You win! Rock beats Scissors!"
+            }
+            break;
+
+            case "paper":
+              if (computerSelection == "Paper") {
+                return "Draw. Paper vs Paper";
+              } else if (computerSelection == "Scissors") {
+                return "You lose! Scissor beats Paper"
+              } else {
+                return "You win! Paper beats Rock"
+              }
+              break;
+
+              case "scissors":
+                if (computerSelection == "Scissors") {
+                  return "Draw. Scissors vs Scissors";
+                } else if (computerSelection == "Rock") {
+                  return "You lose! Rock beats Scissors"
+                } else {
+                  return "You win! Scissors beats Paper"
+                }
+                break;
+
+              default:
+                return "Not a valid input";
+        }
+      }
+
+      //Juego de 5 rondas.
+      function game() {
+
+        let yourScore = 0;
+        let computerScore = 0;
+        let draw = 0;
+
+        for (round = 1; round <= 5; round++) {
+          alert(`Round ${round} of 5. Ready?`);
+          let playerSelection = prompt("Rock, Paper or Scissors?");
+          let computerSelection = computerPlay();
+          let result = playRound(playerSelection, computerSelection);
+          console.log(`You played ${playerSelection} and computer played ${computerSelection}` );
+          console.log(result);
+
+          //generador de score
+
+          if (result.includes("win")) {
+            yourScore++;
+          } else if (result.includes("lose")) {
+            computerScore++;
+          } else {
+            draw++;
+          }
+          console.log(`Your score: ${yourScore}, Computer score: ${computerScore}, Draws: ${draw}`);
+        }
+
+        //conteo de score para saber ganador
+        if (yourScore > computerScore) {
+          console.log(`You won the game ${yourScore} - ${computerScore}`);
+        } else if (yourScore < computerScore) {
+          console.log(`You lost the game! ${yourScore} - ${computerScore}`);
+        } else {
+          console.log(`You draw the game! ${yourScore} - ${computerScore}`);
+        }
+      }
+    </script>
+  </body>
+</html>
