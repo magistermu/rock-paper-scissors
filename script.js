@@ -1,3 +1,25 @@
+//select buttons
+const buttons = document.querySelectorAll('button');
+//select div for displaying results
+const results = document.querySelector('#results');
+
+//add event listener to each button
+for (button of buttons) {
+    button.addEventListener('click', game);
+}
+
+//create paragraphs
+//paragraph that describes round selection and result
+let paraRound = document.createElement('p');
+//para that describes the accumulative score of the game
+let paraScore = document.createElement('p');
+
+//create play again button
+const startButton = document.createElement('button');
+startButton.textContent = 'Play Again';
+startButton.addEventListener('click', startGame);
+
+
 let playerScore = 0;
 let computerScore = 0;
 
@@ -7,43 +29,50 @@ function getComputerChoice() {
     return options[Math.floor(Math.random() * options.length)];
 }
 
-function getPlayerChoice() {
-    let selection = prompt("Rock, Paper, or Scissors");
-    while (selection == null) {
-        selection = prompt("Rock, Paper, or Scissors");
-    }
-    let transformedSelection = capitalize(selection);
-    let checkInput = validateInput(transformedSelection);
+// function getPlayerChoice() {
+//     let selection = prompt("Rock, Paper, or Scissors");
+//     while (selection == null) {
+//         selection = prompt("Rock, Paper, or Scissors");
+//     }
+//     let transformedSelection = capitalize(selection);
+//     let checkInput = validateInput(transformedSelection);
     
-    while (checkInput == false) {
-        selection = prompt("Rock, Paper, or Scissors");
-        transformedSelection = capitalize(selection);
-        checkInput = validateInput(transformedSelection);
-    }
+//     while (checkInput == false) {
+//         selection = prompt("Rock, Paper, or Scissors");
+//         transformedSelection = capitalize(selection);
+//         checkInput = validateInput(transformedSelection);
+//     }
 
-    return transformedSelection;
-}
+//     return transformedSelection;
+// }
 
-function validateInput(choice){
-    return options.includes(choice);
-}
+// function validateInput(choice){
+//     return options.includes(choice);
+// }
 
 function playRound(playerSelection, computerSelection) {
     if (playerSelection == computerSelection) {
-        console.log(`You chose ${playerSelection} and Computer chose ${computerSelection}. It's a Tie.`);
+        //create paragraph
+        paraRound.textContent = `You chose ${playerSelection} and Computer chose ${computerSelection}. It's a Tie.`;
+        results.appendChild(paraRound);
     } else if (
         (playerSelection == 'Rock' && computerSelection == 'Scissors') ||
         (playerSelection == 'Paper' && computerSelection == 'Rock') ||
         (playerSelection == 'Scissors' && computerSelection == 'Paper')
         ) {
-            console.log(`You chose ${playerSelection} and Computer chose ${computerSelection}. You won.`); 
+            //create paragraph
+            paraRound.textContent = `You chose ${playerSelection} and Computer chose ${computerSelection}. You won.`;
+            results.appendChild(paraRound); 
             playerScore += 1;
             
         } else {
-            console.log(`You chose ${playerSelection} and Computer chose ${computerSelection}. You lost.`);
+            //create paragraph
+            paraRound.textContent = `You chose ${playerSelection} and Computer chose ${computerSelection}. You lost.`;
+            results.appendChild(paraRound);
             computerScore += 1;
         }
-        console.log(`Player: ${playerScore}. Computer: ${computerScore}.`);
+        paraScore.textContent = `Player: ${playerScore}. Computer: ${computerScore}.`;
+        results.appendChild(paraScore);
 }
 
 function capitalize(string) {
@@ -51,25 +80,45 @@ function capitalize(string) {
 }
 
 function game() {
-    for (i = 0; i < 5; i++) {
-        let playerSelection = getPlayerChoice();
-        let computerSelection = getComputerChoice();
-        console.log(`______________`);
-        console.log(`Round number ${i + 1} of 5.`);
-        playRound(playerSelection, computerSelection);
-    }
+    let playerSelection = this.textContent;
+    let computerSelection = getComputerChoice();
+    playRound(playerSelection, computerSelection);
+
     checkWinner(playerScore, computerScore);
-    //reset score
-    playerScore = 0;
-    computerScore = 0;
 }
 
+//check who gets to 5 first
 function checkWinner(playerScore, computerScore) {
-    if (playerScore == computerScore) {
-        console.log(`It's a tie.`);
-    } else if (playerScore > computerScore) {
-        console.log(`You are the winner!`);
-    } else {
-        console.log(`You lost. Computer is the winner.`);
+    let gameResult = document.createElement('p');
+    if (playerScore == 5 || computerScore == 5) {
+        //disable buttons
+        for (button of buttons) {
+            button.disabled = true;
+        }
+        if (playerScore > computerScore) {
+            results.appendChild(gameResult);
+            gameResult.textContent = `You are the winner!`;
+            } else {
+            gameResult.textContent = `You lost. Computer is the winner.`;
+            results.appendChild(gameResult);
+            }
+            results.appendChild(startButton);    
+    }
+}
+
+function startGame() {
+    playerScore = 0;
+    computerScore = 0;
+    removeAllChildNodes(results);
+    //enable buttons
+    for (button of buttons) {
+        button.disabled = false;
+    }
+}
+
+//empty div to start game
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
     }
 }
